@@ -20,6 +20,13 @@ namespace Autocomplete
         /// Функция должна быть рекурсивной
         /// и работать за O(log(items.Length)*L), где L — ограничение сверху на длину фразы
         /// </remarks>
+        
+        private static int GetLeft(IReadOnlyList<string> phrases, string prefix, int left, int right)
+        {
+
+            throw new NotImplementedException();
+        }
+
         public static int GetLeftBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
             // IReadOnlyList похож на List, но у него нет методов модификации списка.
