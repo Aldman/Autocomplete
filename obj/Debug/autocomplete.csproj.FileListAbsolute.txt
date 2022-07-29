@@ -1,0 +1,1 @@
+C:\Users\AleshkinDV\Desktop\C# наброски\VS15\Курс\Поиск и сортировка\autocomplete.csproj\bin\Debug\Autocomplete.exe.config
