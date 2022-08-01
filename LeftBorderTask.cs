@@ -20,24 +20,15 @@ namespace Autocomplete
         /// Функция должна быть рекурсивной
         /// и работать за O(log(items.Length)*L), где L — ограничение сверху на длину фразы
         /// </remarks>
-        
-        private static int GetLeft(IReadOnlyList<string> phrases, string prefix, int left, int right)
-        {
-
-            throw new NotImplementedException();
-        }
 
         public static int GetLeftBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
-            // IReadOnlyList похож на List, но у него нет методов модификации списка.
-            // Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
-            for (int i = 0; i < phrases.Count; i++)
-            {
-                if (string.Compare(prefix, phrases[i], StringComparison.OrdinalIgnoreCase) < 0
-                    || phrases[i].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                    return i - 1;
-            }
-            return phrases.Count-1;
+            if (right - left == 1) return left;
+            else if (right == left) return left - 1;
+            var median = left + (right - left) / 2;
+            if (String.Compare(prefix, phrases[median]) > 0)
+                return GetLeftBorderIndex(phrases, prefix, median + 1, right);
+            return GetLeftBorderIndex(phrases, prefix, left, median);
         }
     }
 }
