@@ -68,6 +68,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RightBorderTask.cs" />
+    <Compile Include="RightBorderTests.cs" />
     <Compile Include="TaskExtensions.cs" />
     <EmbeddedResource Include="AutocompleteForm.resx">
       <DependentUpon>AutocompleteForm.cs</DependentUpon>

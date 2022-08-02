@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Autocomplete
 {
@@ -15,17 +14,26 @@ namespace Autocomplete
         /// Функция должна быть НЕ рекурсивной
         /// и работать за O(log(items.Length)*L), где L — ограничение сверху на длину фразы
         /// </remarks>
+        
         public static int GetRightBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
-            // IReadOnlyList похож на List, но у него нет методов модификации списка.
-            // Этот код решает задачу, но слишком неэффективно. Замените его на бинарный поиск!
-            for (int i = phrases.Count-1; i >= 0; i--)
+            // TODO: сделать более изящное решение
+            int median = 0;
+            while (right != left)
             {
-                if (string.Compare(prefix, phrases[i], StringComparison.OrdinalIgnoreCase) >= 0 
-                    || phrases[i].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                    return i + 1;
+                median = left + (right - left) / 2;
+                if (median < 0)
+                {
+                    right = phrases.Count;
+                    break;
+                }
+                if (String.Compare(prefix, phrases[median]) <= 0)
+                    right = median;
+                else left = median + 1;
             }
-            return 0;
+            if ((phrases.Count - right == 0) || (phrases[right] != prefix))
+                return right;
+            return right + 1;
         }
     }
 }
