@@ -23,12 +23,12 @@ namespace Autocomplete
 
         public static int GetLeftBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
-            if (right - left == 1) return left;
-            else if (right == left) return left - 1;
+            if (right - left == 1)
+                return left;
             var median = left + (right - left) / 2;
-            if (String.Compare(prefix, phrases[median]) > 0)
-                return GetLeftBorderIndex(phrases, prefix, median + 1, right);
-            return GetLeftBorderIndex(phrases, prefix, left, median);
+            if (String.Compare(prefix, phrases[median]) <= 0)
+                return GetLeftBorderIndex(phrases, prefix, left, median);
+            return GetLeftBorderIndex(phrases, prefix, median, right);
         }
     }
 }

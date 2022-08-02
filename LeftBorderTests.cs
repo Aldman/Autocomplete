@@ -13,8 +13,8 @@ namespace Autocomplete
             get
             {
                 var phrases = new Phrases(
-                     new string[] { "a"},
-                     new string[] { "ab"},
+                     new string[] {"a"},
+                     new string[] { "a", "ab", "abc"},
                      new string[] { "abc" });
                 var prefix = "abc";
                 var expectedResult = 1;
