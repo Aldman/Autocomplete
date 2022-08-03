@@ -17,8 +17,6 @@ namespace Autocomplete
         
         public static int GetRightBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
-            // TODO: сделать более изящное решение
-            // Найти индекс первого элемента большего заданного или N, если такого нет (правая граница)
             int median = 0;
             while (right != left)
             {
