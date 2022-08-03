@@ -17,7 +17,7 @@ namespace Autocomplete
                      new string[] { "a", "ab", "abc"},
                      new string[] { "abc" });
                 var prefix = "abc";
-                var expectedResult = 1;
+                var expectedResult = 2;
 
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
             }

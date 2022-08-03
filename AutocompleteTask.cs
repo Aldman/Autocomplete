@@ -31,6 +31,12 @@ namespace Autocomplete
         public static string[] GetTopByPrefix(IReadOnlyList<string> phrases, string prefix, int count)
         {
             // тут стоит использовать написанный ранее класс LeftBorderTask
+            var nextIndex = LeftBorderTask
+                .GetLeftBorderIndex(phrases, prefix, -1, phrases.Count);
+            for (int i = 1; i < count; i++)
+            {
+
+            }
             return null;
         }
 
@@ -47,6 +53,32 @@ namespace Autocomplete
     [TestFixture]
     public class AutocompleteTests
     {
+        private static IEnumerable<TestCaseData> TopPrefixCaseData
+        {
+            get
+            {
+                var phrases = new Phrases(
+                    new string[] { "aa", "ab", "ac", "bc" },
+                    new string[] { "" },
+                    new string[] { "" });
+                var prefix = "a";
+                var count = 2;
+                var expectedResult = new string[]
+                {
+                    "aa", "ab"
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+            }
+        }
+
+        public void GetTopByPrefix(IReadOnlyList<string> phrases,
+            string prefix, int count, string[] expectedResult)
+        {
+            var actualResult = AutocompleteTask
+                .GetTopByPrefix(phrases, prefix, count);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
         [Test]
         public void TopByPrefix_IsEmpty_WhenNoPhrases()
         {

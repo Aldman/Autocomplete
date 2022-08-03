@@ -24,7 +24,16 @@ namespace Autocomplete
         public static int GetLeftBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
             if (right - left == 1)
+            {
+                while (left != -1)
+                {
+                    if (phrases[left].StartsWith(prefix))
+                        left--;
+                    else break;
+                }
                 return left;
+            }
+
             var median = left + (right - left) / 2;
             if (String.Compare(prefix, phrases[median]) <= 0)
                 return GetLeftBorderIndex(phrases, prefix, left, median);

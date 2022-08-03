@@ -41,10 +41,11 @@ namespace Autocomplete
                     new string[] { "abc" });
                 prefix = "aa";
                 expectedResult = 1;
-                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
+                //yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
             }
         }
 
+        [Test]
         [TestCaseSource("GetRightCaseData")]
         public static void GetRightBorderIndex(IReadOnlyList<string> phrases,
             string prefix, int left, int right, int expectedResult)
