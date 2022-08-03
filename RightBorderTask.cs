@@ -18,6 +18,7 @@ namespace Autocomplete
         public static int GetRightBorderIndex(IReadOnlyList<string> phrases, string prefix, int left, int right)
         {
             // TODO: сделать более изящное решение
+            // Найти индекс первого элемента большего заданного или N, если такого нет (правая граница)
             int median = 0;
             while (right != left)
             {
@@ -32,7 +33,10 @@ namespace Autocomplete
                 else left = median + 1;
             }
             if ((phrases.Count - right == 0) || (phrases[right] != prefix))
+            {
+                if (!String.IsNullOrEmpty(phrases[right]))
                 return right;
+            }
             return right + 1;
         }
     }

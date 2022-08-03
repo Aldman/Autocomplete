@@ -14,7 +14,7 @@ namespace Autocomplete
                 var phrases = new Phrases(
                     new string[] { "a", "ab", "abc" },
                     new string[] { "a" },
-                     new string[] { "abc" });
+                    new string[] { "abc" });
                 var prefix = "zzz";
                 var expectedResult = phrases.Length;
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
@@ -30,9 +30,17 @@ namespace Autocomplete
                 phrases = new Phrases(
                     new string[] { },
                     new string[] { },
-                     new string[] { });
+                    new string[] { });
                 prefix = "aa";
-                expectedResult = -1;
+                expectedResult = phrases.Length;
+                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
+
+                phrases = new Phrases(
+                    new string[] { "ab", "ab", "ab", "ab"},
+                    new string[] { "a" },
+                    new string[] { "abc" });
+                prefix = "aa";
+                expectedResult = 1;
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
             }
         }
