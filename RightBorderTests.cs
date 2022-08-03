@@ -19,6 +19,10 @@ namespace Autocomplete
                 var expectedResult = phrases.Length;
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
 
+                prefix = "abc";
+                expectedResult = 3;
+                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
+
                 prefix = "aa";
                 expectedResult = 1;
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
@@ -26,6 +30,11 @@ namespace Autocomplete
                 prefix = "";
                 expectedResult = phrases.Length;
                 yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
+
+                prefix = "abb";
+                expectedResult = 2;
+                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult)
+                    .SetName("abb");
 
                 phrases = new Phrases(
                     new string[] { },
@@ -40,8 +49,18 @@ namespace Autocomplete
                     new string[] { "a" },
                     new string[] { "abc" });
                 prefix = "aa";
-                expectedResult = 1;
-                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult);
+                expectedResult = 0;
+                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult).
+                    SetName("aa with expected 0");
+
+                phrases = new Phrases(
+                    new string[] { "a", "bcd", "bcefg", "bcefh", "bcf", "bcff", "zzz "},
+                    new string[] { "a" },
+                    new string[] { "abc" });
+                prefix = "bc";
+                expectedResult = 6;
+                yield return new TestCaseData(phrases, prefix, -1, phrases.Length, expectedResult)
+                    .SetName("bc");
             }
         }
 
@@ -53,6 +72,5 @@ namespace Autocomplete
                 .GetRightBorderIndex(phrases, prefix, left, right);
             Assert.AreEqual(expectedResult, actualResult);
         }
-
     }
 }
