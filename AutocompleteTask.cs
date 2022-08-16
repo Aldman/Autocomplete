@@ -19,7 +19,7 @@ namespace Autocomplete
             var index = LeftBorderTask.GetLeftBorderIndex(phrases, prefix, -1, phrases.Count) + 1;
             if (index < phrases.Count && phrases[index].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                 return phrases[index];
-            
+
             return null;
         }
 
@@ -31,13 +31,23 @@ namespace Autocomplete
         public static string[] GetTopByPrefix(IReadOnlyList<string> phrases, string prefix, int count)
         {
             // тут стоит использовать написанный ранее класс LeftBorderTask
-            var nextIndex = LeftBorderTask
+            var prefixForReturning = new List<string>();
+            int nextIndex = LeftBorderTask
                 .GetLeftBorderIndex(phrases, prefix, -1, phrases.Count);
+            if (phrases.Count > 0 && phrases[++nextIndex].StartsWith(prefix))
+            {
+                prefixForReturning.Add(phrases[nextIndex]);
+                if (count > phrases.Count - nextIndex)
+                    count = phrases.Count - nextIndex;
+            }
+            else count = 0;
+
             for (int i = 1; i < count; i++)
             {
-
+                if (phrases[++nextIndex].StartsWith(prefix))
+                    prefixForReturning.Add(phrases[nextIndex]);
             }
-            return null;
+            return prefixForReturning.ToArray();
         }
 
         /// <returns>
@@ -46,13 +56,31 @@ namespace Autocomplete
         public static int GetCountByPrefix(IReadOnlyList<string> phrases, string prefix)
         {
             // тут стоит использовать написанные ранее классы LeftBorderTask и RightBorderTask
-            return -1;
+            var leftBorder = LeftBorderTask
+                .GetLeftBorderIndex(phrases, prefix, -1, phrases.Count);
+            var rigthBorder = RightBorderTask
+                .GetRightBorderIndex(phrases, prefix, -1, phrases.Count);
+            //var nextIndex = leftBorder + 1;
+            var phrasesCountByPrefix = 0;
+            for (int i = leftBorder + 1; i < rigthBorder; i++)
+            {
+                if (phrases[i].StartsWith(prefix))
+                    phrasesCountByPrefix++;
+                else break;
+            }
+            return phrasesCountByPrefix;
         }
     }
 
     [TestFixture]
     public class AutocompleteTests
     {
+        #region Тесты Count ByPrefix
+
+
+        #endregion
+
+        #region Тесты Top Prefix
         private static IEnumerable<TestCaseData> TopPrefixCaseData
         {
             get
@@ -65,12 +93,89 @@ namespace Autocomplete
                 var count = 2;
                 var expectedResult = new string[]
                 {
-                    "aa", "ab"
+                    "aa  ", "ab  "
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+
+                phrases = new Phrases(
+                    new string[] { "aa" },
+                    new string[] { "" },
+                    new string[] { "" });
+                expectedResult = new string[]
+                {
+                    "aa  "
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+
+                phrases = new Phrases(
+                    new string[] { "aa", "ab", "ac" },
+                    new string[] { "" },
+                    new string[] { "" });
+                prefix = "z";
+                count = 2;
+                expectedResult = new string[]
+                {
+
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+
+                phrases = new Phrases(
+                    new string[0],
+                    new string[0],
+                    new string[0]);
+                prefix = "z";
+                count = 2;
+                expectedResult = new string[]
+                {
+
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+
+                phrases = new Phrases(
+                    new string[] { "a", "b", "c", "c", "d", "e" },
+                    new string[] { "" },
+                    new string[] { "" });
+                prefix = "c";
+                count = 10;
+                expectedResult = new string[]
+                {
+                    "c  ", "c  "
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+
+                phrases = new Phrases(
+                    new string[] { "aa", "ab", "bc", "bd", "be", "ca", "cb" },
+                    new string[] { "" },
+                    new string[] { "" });
+                prefix = "a";
+                count = 2;
+                expectedResult = new string[]
+                {
+                    "aa  ", "ab  "
                 };
                 yield return new TestCaseData(phrases, prefix, count, expectedResult);
             }
         }
 
+        private static IEnumerable<TestCaseData> TopPrefixData
+        {
+            get
+            {
+                var phrases = new Phrases(
+                new string[] { "aa", "ab", "ac" },
+                    new string[] { "" },
+                    new string[] { "" });
+                var prefix = "z";
+                var count = 2;
+                var expectedResult = new string[]
+                {
+
+                };
+                yield return new TestCaseData(phrases, prefix, count, expectedResult);
+            }
+        }
+
+        [TestCaseSource("TopPrefixCaseData")]
         public void GetTopByPrefix(IReadOnlyList<string> phrases,
             string prefix, int count, string[] expectedResult)
         {
@@ -78,23 +183,6 @@ namespace Autocomplete
                 .GetTopByPrefix(phrases, prefix, count);
             Assert.AreEqual(expectedResult, actualResult);
         }
-
-        [Test]
-        public void TopByPrefix_IsEmpty_WhenNoPhrases()
-        {
-            // ...
-            //CollectionAssert.IsEmpty(actualTopWords);
-        }
-
-        // ...
-
-        [Test]
-        public void CountByPrefix_IsTotalCount_WhenEmptyPrefix()
-        {
-            // ...
-            //Assert.AreEqual(expectedCount, actualCount);
-        }
-
-        // ...
+        #endregion
     }
 }
