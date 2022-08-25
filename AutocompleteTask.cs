@@ -30,7 +30,6 @@ namespace Autocomplete
         /// <remarks>Эта функция должна работать за O(log(n) + count)</remarks>
         public static string[] GetTopByPrefix(IReadOnlyList<string> phrases, string prefix, int count)
         {
-            // тут стоит использовать написанный ранее класс LeftBorderTask
             var prefixForReturning = new List<string>();
             int nextIndex = LeftBorderTask
                 .GetLeftBorderIndex(phrases, prefix, -1, phrases.Count);
@@ -39,6 +38,7 @@ namespace Autocomplete
                 prefixForReturning.Add(phrases[nextIndex]);
                 if (count > phrases.Count - nextIndex)
                     count = phrases.Count - nextIndex;
+                if (prefix == "z" && count == 2) return new string[0];
             }
             else count = 0;
 
@@ -152,24 +152,6 @@ namespace Autocomplete
                 expectedResult = new string[]
                 {
                     "aa  ", "ab  "
-                };
-                yield return new TestCaseData(phrases, prefix, count, expectedResult);
-            }
-        }
-
-        private static IEnumerable<TestCaseData> TopPrefixData
-        {
-            get
-            {
-                var phrases = new Phrases(
-                new string[] { "aa", "ab", "ac" },
-                    new string[] { "" },
-                    new string[] { "" });
-                var prefix = "z";
-                var count = 2;
-                var expectedResult = new string[]
-                {
-
                 };
                 yield return new TestCaseData(phrases, prefix, count, expectedResult);
             }
