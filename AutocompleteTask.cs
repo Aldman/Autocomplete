@@ -33,19 +33,17 @@ namespace Autocomplete
             var prefixForReturning = new List<string>();
             int nextIndex = LeftBorderTask
                 .GetLeftBorderIndex(phrases, prefix, -1, phrases.Count);
-            if (phrases.Count > 0 && phrases[++nextIndex].StartsWith(prefix))
-            {
-                prefixForReturning.Add(phrases[nextIndex]);
-                if (count > phrases.Count - nextIndex)
-                    count = phrases.Count - nextIndex;
-                if (prefix == "z" && count == 2) return new string[0];
-            }
-            else count = 0;
+            var endIndex = RightBorderTask
+                .GetRightBorderIndex(phrases, prefix, -1, phrases.Count);
+            if (endIndex - nextIndex <= 1) return new string[0];
+            nextIndex++;
 
-            for (int i = 1; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                if (phrases[++nextIndex].StartsWith(prefix))
+                if (phrases[nextIndex].StartsWith(prefix))
                     prefixForReturning.Add(phrases[nextIndex]);
+                else break;
+                if (++nextIndex == phrases.Count) break; 
             }
             return prefixForReturning.ToArray();
         }
